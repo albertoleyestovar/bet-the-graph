@@ -1,0 +1,35 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: BetApp
+    network: blast-testnet
+    source:
+      address: "0x73194Fc3b18521078F3BbA6A605bd5ba64aBbe08"
+      abi: BetApp
+      startBlock: 15091971
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - OwnershipTransferred
+        - betPlaced
+        - betRoundFinished
+        - claimedReward
+      abis:
+        - name: BetApp
+          file: ./abis/BetApp.json
+      eventHandlers:
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: betPlaced(indexed uint256,indexed address,uint256,uint256)
+          handler: handlebetPlaced
+        - event: betRoundFinished(indexed uint256,uint256)
+          handler: handlebetRoundFinished
+        - event: claimedReward(indexed uint256,indexed address,uint256)
+          handler: handleclaimedReward
+      file: ./src/bet-app.ts

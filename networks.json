@@ -1,0 +1,8 @@
+{
+  "blast-testnet": {
+    "BetApp": {
+      "address": "0x73194Fc3b18521078F3BbA6A605bd5ba64aBbe08",
+      "startBlock": 15091971
+    }
+  }
+}
