@@ -84,7 +84,7 @@ export function handlebetRoundFinished(event: betRoundFinishedEvent): void {
 
   entity.save()
 
-  let roundAddressListEntity = new roundAddressList(Bytes.fromUTF8(entity._roundId.toString()));
+  let roundAddressListEntity = roundAddressList.load(Bytes.fromUTF8(entity._roundId.toString()));
   if (roundAddressListEntity) {
     const _addressList = roundAddressListEntity._addressList;
 
