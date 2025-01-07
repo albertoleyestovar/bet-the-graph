@@ -9,8 +9,8 @@ type OwnershipTransferred @entity(immutable: true) {
 
 type betPlaced @entity(immutable: true) {
   id: Bytes!
-  _roundId: BigInt! # uint256
-  _address: Bytes! # address
+  _roundId: BigInt! @index # uint256 
+  _address: Bytes! @index # address
   _betValue: BigInt! # uint256
   _betAmount: BigInt! # uint256
   blockNumber: BigInt!
@@ -35,4 +35,23 @@ type claimedReward @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+}
+
+type roundAddressList @entity(immutable: false) {
+  id: Bytes!
+  _roundId: BigInt! # uint256
+  _addressList: [Bytes!]!
+}
+type userRound @entity(immutable: false) {
+  id: Bytes!
+  _roundId: BigInt! # uint256
+  _address: Bytes! # address
+  _betAmount: BigInt! # uint256
+  _betValue: BigInt! # uint256
+  _rewardAmount: BigInt
+  _isClaimed: Boolean
+  _isJoined: Boolean
+  _winningValue: BigInt
+  _totalDeposit: BigInt
+  _numJoined: Int
 }
