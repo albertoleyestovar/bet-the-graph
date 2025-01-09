@@ -66,7 +66,7 @@ export function handlebetPlaced(event: betPlacedEvent): void {
   roundEntity._roundId = event.params._roundId
   roundEntity._address = event.params._address
   roundEntity._betValue = event.params._betValue
-  roundEntity._betAmount = event.params._betValue
+  roundEntity._betAmount = event.params._betAmount
   roundEntity._isJoined = true;
   roundEntity.save()
 }
@@ -119,6 +119,7 @@ export function handlebetRoundFinished(event: betRoundFinishedEvent): void {
           _rewardAmount = totalWinAmount == 0 ? 0 : i32(Math.floor(betAmount * totalBetAmount * 0.95) / totalWinAmount);
         }
         roundEntity._rewardAmount = BigInt.fromI32(i32(Math.floor(_rewardAmount)));
+        roundEntity._isClaimed = false;
         roundEntity._totalDeposit = BigInt.fromI32(totalBetAmount);
         roundEntity._winningValue = entity._winningValue;
         roundEntity._numJoined = _addressList.length;
