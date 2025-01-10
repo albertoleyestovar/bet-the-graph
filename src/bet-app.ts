@@ -11,7 +11,8 @@ import {
   betRoundFinished,
   claimedReward,
   userRound,
-  roundAddressList
+  roundAddressList,
+  RoundInformation
 } from "../generated/schema"
 
 export function handleOwnershipTransferred(
@@ -69,6 +70,19 @@ export function handlebetPlaced(event: betPlacedEvent): void {
   roundEntity._betAmount = event.params._betAmount
   roundEntity._isJoined = true;
   roundEntity.save()
+
+  // Saving RoundInformation entity
+  id = Bytes.fromUTF8(`${entity._roundId.toString()}-unique}`);
+  let rInfo = RoundInformation.load(id);
+  if (!rInfo) {
+    rInfo = new RoundInformation(id);
+    rInfo._totalBetAmount = BigInt.zero();
+  }
+  
+  rInfo._roundId = event.params._roundId;
+  rInfo._betValue = event.params._betValue;
+  rInfo._totalBetAmount = BigInt.fromI32(rInfo._totalBetAmount.toI32() + event.params._betAmount.toI32());
+  rInfo.save();  
 }
 
 export function handlebetRoundFinished(event: betRoundFinishedEvent): void {
@@ -116,13 +130,14 @@ export function handlebetRoundFinished(event: betRoundFinishedEvent): void {
         const betValue = roundEntity._betValue;
         let _rewardAmount = 0;
         if (betValue == entity._winningValue) {
-          _rewardAmount = totalWinAmount == 0 ? 0 : i32(Math.floor(betAmount * totalBetAmount * 0.95) / totalWinAmount);
+          _rewardAmount = totalWinAmount == 0 ? 0 : i32(Math.floor(betAmount / totalWinAmount * totalBetAmount * 0.95));
+          roundEntity._isClaimed = false;
         }
-        roundEntity._rewardAmount = BigInt.fromI32(i32(Math.floor(_rewardAmount)));
-        roundEntity._isClaimed = false;
+        roundEntity._rewardAmount = BigInt.fromI32(_rewardAmount);
         roundEntity._totalDeposit = BigInt.fromI32(totalBetAmount);
         roundEntity._winningValue = entity._winningValue;
         roundEntity._numJoined = _addressList.length;
+        roundEntity._totalWinAmount = BigInt.fromI32(totalWinAmount);
         roundEntity.save();
       }
     }

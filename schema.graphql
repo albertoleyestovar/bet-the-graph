@@ -42,6 +42,7 @@ type roundAddressList @entity(immutable: false) {
   _roundId: BigInt! # uint256
   _addressList: [Bytes!]!
 }
+
 type userRound @entity(immutable: false) {
   id: Bytes!
   _roundId: BigInt! # uint256
@@ -53,5 +54,14 @@ type userRound @entity(immutable: false) {
   _isJoined: Boolean
   _winningValue: BigInt
   _totalDeposit: BigInt
+  _totalWinAmount: BigInt
   _numJoined: Int
+}
+
+# Information to store totalBetAmount per roundId and betValue
+type RoundInformation @entity(immutable: false) {
+  id: Bytes!
+  _roundId: BigInt! # uint256
+  _betValue: BigInt! # uint256
+  _totalBetAmount: BigInt # uint256
 }
